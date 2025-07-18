@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 interface CardProps {
   image: string;
@@ -8,6 +8,8 @@ interface CardProps {
   fullContent: string;
   imageAlt?: string;
   isDarkMode: boolean;
+  tags: string[];
+  onOpenModal?: () => void;
 }
 
 const Card: React.FC<CardProps> = ({ 
@@ -15,151 +17,61 @@ const Card: React.FC<CardProps> = ({
   title, 
   dateTime, 
   description, 
-  fullContent,
   imageAlt = '',
-  isDarkMode
+  isDarkMode,
+  tags,
+  onOpenModal
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  // Close modal when clicking outside
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeModal();
-    }
-  };
-
-  // Close modal on escape key
-  useEffect(() => {
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isModalOpen) {
-        closeModal();
-      }
-    };
-
-    if (isModalOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isModalOpen]);
-
   return (
-    <>
-      {/* Card */}
-      <div 
-        className={`${
-          isDarkMode 
-            ? 'bg-gray-800 border-gray-700 shadow-lg shadow-white/10 hover:shadow-white/20' 
-            : 'bg-white border-gray-200 shadow-md hover:shadow-lg'
-        } border rounded-lg overflow-hidden max-w-sm transition-all duration-300 cursor-pointer transform hover:scale-105 mx-auto`}
-        onClick={openModal}
-      >
-        <div className="w-full h-48 overflow-hidden">
-          <img 
-            src={image} 
-            alt={imageAlt || title}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-          />
-        </div>
-        <div className="p-4">
-          <h3 className={`text-lg font-semibold mb-2 line-clamp-2 ${
-            isDarkMode ? 'text-white' : 'text-gray-900'
-          }`}>
-            {title}
-          </h3>
-          <p className={`text-sm mb-3 ${
-            isDarkMode ? 'text-gray-400' : 'text-gray-600'
-          }`}>
-            {dateTime}
-          </p>
-          <p className={`text-sm leading-relaxed line-clamp-3 ${
-            isDarkMode ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            {description}
-          </p>
-        </div>
+    <div 
+      className={`group ${
+        isDarkMode 
+          ? 'bg-gray-800 border-gray-700 shadow-lg shadow-white/10 hover:shadow-white/20' 
+          : 'bg-white border-blue-200 shadow-lg shadow-blue-200/40 hover:shadow-blue-300/60 border-2'
+      } rounded-xl overflow-hidden w-full transition-all duration-300 cursor-pointer transform hover:scale-105 hover:-translate-y-2`}
+      onClick={onOpenModal}
+    >
+      <div className="w-full h-48 overflow-hidden">
+        <img 
+          src={image} 
+          alt={imageAlt || title}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+        />
       </div>
-
-      {/* Full Screen Modal */}
-      {isModalOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-2 sm:p-4"
-          onClick={handleBackdropClick}
-        >
-          <div className={`${
-            isDarkMode ? 'bg-gray-800' : 'bg-white'
-          } rounded-lg w-full h-full sm:w-[95vw] sm:h-[95vh] overflow-hidden flex flex-col shadow-2xl`}>
-            {/* Modal Header */}
-            <div className={`flex justify-between items-center p-4 sm:p-6 border-b ${
-              isDarkMode ? 'border-gray-700' : 'border-gray-200'
-            }`}>
-              <h2 className={`text-xl sm:text-2xl font-bold pr-4 ${
-                isDarkMode ? 'text-white' : 'text-gray-900'
-              }`}>
-                {title}
-              </h2>
-              <button
-                onClick={closeModal}
-                className={`text-2xl sm:text-3xl font-bold transition-colors ${
-                  isDarkMode 
-                    ? 'text-gray-400 hover:text-white' 
-                    : 'text-gray-400 hover:text-gray-600'
-                }`}
-              >
-                ×
-              </button>
-            </div>
-            
-            {/* Modal Content */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-              <div className="mb-6">
-                <img 
-                  src={image} 
-                  alt={imageAlt || title}
-                  className="w-full h-48 sm:h-64 md:h-80 object-cover rounded-lg mb-4"
-                />
-                <p className={`text-sm mb-4 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                  {dateTime}
-                </p>
-              </div>
-              
-              <div className="prose prose-lg max-w-none">
-                <p className={`leading-relaxed whitespace-pre-wrap text-base sm:text-lg ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  {fullContent}
-                </p>
-              </div>
-            </div>
-            
-            {/* Modal Footer */}
-            <div className={`p-4 sm:p-6 border-t flex justify-end ${
-              isDarkMode ? 'border-gray-700' : 'border-gray-200'
-            }`}>
-              <button
-                onClick={closeModal}
-                className={`px-6 py-2 rounded transition-colors ${
-                  isDarkMode 
-                    ? 'bg-gray-600 text-white hover:bg-gray-500' 
-                    : 'bg-gray-500 text-white hover:bg-gray-600'
-                }`}
-              >
-                Close
-              </button>
-            </div>
-          </div>
+      <div className="p-4">
+        <h3 className={`text-lg font-bold mb-3 line-clamp-2 ${
+          isDarkMode ? 'text-white' : 'text-gray-900'
+        }`}>
+          {title}
+        </h3>
+        
+        <div className="flex flex-wrap gap-2 mb-3">
+          {tags.slice(0, 3).map((tag, index) => (
+            <span
+              key={index}
+              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 hover:scale-105 ${
+                isDarkMode 
+                  ? 'bg-blue-600/30 text-blue-300 border border-blue-500/50 hover:bg-blue-600/40' 
+                  : 'bg-blue-100 text-blue-800 border border-blue-300 hover:bg-blue-200'
+              }`}
+            >
+              {tag}
+            </span>
+          ))}
         </div>
-      )}
-    </>
+        
+        <p className={`text-sm mb-3 font-medium ${
+          isDarkMode ? 'text-gray-400' : 'text-gray-600'
+        }`}>
+          {dateTime}
+        </p>
+        <p className={`text-sm leading-relaxed line-clamp-3 ${
+          isDarkMode ? 'text-gray-300' : 'text-gray-700'
+        }`}>
+          {description}
+        </p>
+      </div>
+    </div>
   );
 };
 
