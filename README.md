@@ -1,186 +1,27 @@
-# Trustify - Your Trusted News Source
+# Trustify: The AI-Powered News Analyzer
 
-A modern, responsive news application built with React Router 7 that delivers the latest news from reliable sources around the world.
+Trustify is an intelligence-driven news platform designed to cut through media slant and give you the unfiltered truth about current global events. Rather than simply listing news articles, Trustify actively scrapes top global headlines, mathematically groups related stories together, and uses Artificial Intelligence to analyze the hidden biases behind every publication's phrasing and narrative.
 
-## Features
+## 🌟 Core Features
 
-- 📰 Real-time news fetching from NewsAPI.org
-- 🔍 Advanced search functionality
-- 🏷️ Category-based filtering (Technology, Business, Sports, etc.)
-- 🌙 Dark/Light mode toggle
-- 📱 Fully responsive design
-- ⚡️ Fast loading with optimized performance
-- 🎨 Beautiful animations with GSAP
-- 🔒 TypeScript for type safety
-- 🎉 TailwindCSS for modern styling
-- 🚀 Server-side rendering with React Router 7
+### 1. Dynamic Narrative Clustering
+Trustify doesn't show you ten different articles about the same event scattered across a feed. Instead, the application intelligently groups articles covering the same story into unified **Clusters**. For every cluster, the AI generates a completely neutral, factual summary of the event based purely on the overlapping details across all sources.
 
-## Getting Started
+### 2. The Interactive Bias Spectrum
+Every article processed by Trustify undergoes deep linguistic analysis by Google Gemini. Trustify evaluates the headline's wording, framing, and subjective language to generate a **Bias Score** ranging from -100 (Extreme Left) to +100 (Extreme Right). These scores are plotted interactively on a beautiful, color-coded visual spectrum map, allowing you to instantly visualize the media slant of a specific event at a glance.
 
-### Prerequisites
+### 3. Automated Media Sourcing
+A premium news reading experience requires high-quality imagery. When Trustify scrapes an article that is missing a header image, or if a source provides a low-resolution thumbnail, the application intercepts it and dynamically generates a relevant stock photo. It does this by feeding the AI's core event summary directly into the Unsplash API, guaranteeing that the dashboard always looks pristine and contextually relevant.
 
-Before running Trustify, you'll need:
-- Node.js (v18 or higher)
-- A NewsAPI.org API key (free at [newsapi.org](https://newsapi.org/))
+## ⚙️ How It Works Under the Hood
 
-### Installation
+Trustify is built as a highly robust, server-side data pipeline running on React Router 7. 
 
-1. Clone the repository:
-```bash
-git clone https://github.com/your-username/trustify.git
-cd trustify
-```
+**Phase 1: Concurrent Data Ingestion**
+When the dashboard is requested, Trustify spins up 9 concurrent web scrapers targeting the top global and Indian news outlets (CNN, BBC, Fox News, NYT, NDTV, Times of India, Hindustan Times, Indian Express, and The Hindu). These scrapers utilize strict 5-second timeouts and heavily optimized `cheerio` parsers to instantly extract titles, links, and high-resolution media attributes, ignoring layout noise and tiny lazy-loaded thumbnails.
 
-2. Install the dependencies:
-```bash
-npm install
-```
+**Phase 2: Semantic Intelligence (Google Gemini)**
+The raw scraped data is batched and sent to Google Gemini 2.5 Flash over a secure server connection. A meticulously crafted prompt forces the AI to cross-reference the headlines, identify overarching topics, construct the neutral event summaries, and calculate the numeric bias scores based on journalistic tone analysis.
 
-3. Set up your API configuration:
-   - Create or update `app/config/api.ts` with your NewsAPI key
-   - The application fetches news from NewsAPI.org
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Usage
-
-- **Browse News**: Latest news articles are displayed on the homepage
-- **Search**: Use the search bar to find specific news topics
-- **Filter**: Click on category tags to filter news by topic
-- **Dark Mode**: Toggle between light and dark themes
-- **Read Full Articles**: Click on any news card to read the complete article
-
-## Project Structure
-
-```
-├── app/
-│   ├── components/
-│   │   └── Card.tsx          # News article card component
-│   ├── config/
-│   │   └── api.ts            # API configuration
-│   ├── routes/
-│   │   └── home.tsx          # Main news page
-│   ├── services/
-│   │   └── newsService.ts    # NewsAPI integration
-│   ├── welcome/
-│   │   ├── logo-dark.svg     # Dark mode logo
-│   │   ├── logo-light.svg    # Light mode logo
-│   │   └── welcome.tsx       # Welcome component
-│   ├── app.css              # Global styles
-│   ├── root.tsx             # App root component
-│   └── routes.ts            # Route configuration
-├── public/
-│   ├── favicon.ico
-│   └── logo.png
-├── Dockerfile               # Docker configuration
-├── package.json
-├── vite.config.ts          # Vite configuration
-└── README.md
-```
-
-## Technology Stack
-
-- **Frontend**: React 19 with React Router 7
-- **Styling**: TailwindCSS 4
-- **Animations**: GSAP with ScrollTrigger
-- **Language**: TypeScript
-- **Build Tool**: Vite
-- **News API**: NewsAPI.org
-- **Deployment**: Docker support included
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-# Build the Docker image
-docker build -t trustify .
-
-# Run the container
-docker run -p 3000:3000 trustify
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-- Vercel
-- Netlify
-
-### Environment Variables
-
-Make sure to set up the following environment variables for production:
-
-- `NEWSAPI_KEY`: Your NewsAPI.org API key
-- Any other API configurations as needed
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## API Integration
-
-This application uses [NewsAPI.org](https://newsapi.org/) to fetch news articles. Features include:
-
-- Top headlines from various categories
-- Search functionality across articles
-- Multiple language and country support
-- Source-based filtering
-- Real-time news updates
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured with a modern design system. The application features:
-
-- Responsive design for all devices
-- Dark/Light mode support
-- Smooth animations and transitions
-- Custom components with consistent styling
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-Built with ❤️ using React Router 7 and powered by NewsAPI.org
+**Phase 3: Client Presentation & Caching**
+The analyzed payload is returned to the client where it is rendered using Tailwind CSS and Framer Motion for a deeply animated, editorial aesthetic. To ensure the platform remains incredibly fast and avoids exhausting API rate limits, the entire intelligent payload is cached in a V8 memory store for 15 minutes, meaning page reloads and subsequent visits are absolutely instantaneous.
